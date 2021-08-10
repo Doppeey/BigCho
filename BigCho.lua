@@ -471,7 +471,6 @@ function Cho.Logic.Harass()
 end
 function Cho.Logic.Combo()
 
-    print(Utils.GetEBonusRange())
 
     local Target = TS:GetTarget(Cho.Q.Range, true)
 
@@ -562,9 +561,6 @@ function Cho.LoadMenu()
             Menu.Checkbox("Drawings.W", "W", true)
             Menu.Checkbox("Drawings.R", "R", true)
             Menu.Checkbox("Draw.ComboDamage", "Draw Combo Damage", true)
-
-            Menu.Separator()
-            Menu.ColoredText("Combo", 0xB65A94FF, true)
 
         end)
     end)
