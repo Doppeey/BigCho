@@ -350,13 +350,15 @@ function Cho.Logic.Q(Target, Hitchance, Enable, Auto)
 end
 function Cho.Logic.E(Target, Enable)
     if not Cho.E:IsReady() then
-        return
-    end
-    if not Utils.IsValidTarget(Target) then
-        return
+        return false
     end
 
-    if Enable and Utils.IsInRange(LocalPlayer.Position, Target.Position, 0, LocalPlayer.BoundingRadius + 175 + Utils.GetEBonusRange(), true) then
+
+    if not Utils.IsValidTarget(Target) then
+        return false
+    end
+
+    if Enable and Utils.IsInRange(LocalPlayer.Position, Target.Position, 0, LocalPlayer.BoundingRadius + 175 + Utils.GetEBonusRange()) then
 
 
 
@@ -477,12 +479,16 @@ function Cho.Logic.Combo()
     if Target then
 
 
-        if (getUltDmg() >= Target.Health + 15) then
+        if Cho.R:IsReady() then
 
-            if LocalPlayer:GetSpellState(SpellSlots.R) == SpellStates.Ready then
-                Cho.Logic.R(Target, Menu.Get("Combo.R.Use"), Menu.Get("Combo.R.Flash.Use"))
+            if (getUltDmg() >= Target.Health + 15) then
 
-                return true
+                if LocalPlayer:GetSpellState(SpellSlots.R) == SpellStates.Ready then
+                    Cho.Logic.R(Target, Menu.Get("Combo.R.Use"), Menu.Get("Combo.R.Flash.Use"))
+
+                    return true
+                end
+
             end
 
         end
@@ -553,9 +559,7 @@ function Cho.LoadMenu()
 
         end)
 
-        Menu.Separator()
-        Menu.ColumnLayout("Drawings", "Drawings", 2, true, function()
-            Menu.ColoredText("Drawings", 0xB65A93FF, true)
+        Menu.NewTree("Drawings", "Drawings", function()
             Menu.Checkbox("Drawings.Q", "Q", true)
             Menu.Checkbox("Drawings.E", "E", true)
             Menu.Checkbox("Drawings.W", "W", true)
@@ -615,6 +619,8 @@ function Cho.Logic.Auto()
                     return true
 
                 end
+
+
 
                 if Cho.Logic.Q(Target, HitChance.Immobile, true, true) then
 
