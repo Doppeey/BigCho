@@ -132,14 +132,14 @@ function Utils.GetEBonusRange ()
     local ultLevel = Cho.R:GetLevel()
 
     if ultLevel == 0 then
-        return 0
+        return 50
     end
 
     local stacks = Utils.addStackRange()
 
     local rangeModifier = ({ 4.5, 6, 7.5 })[Cho.R:GetLevel()]
 
-    local rangeAdded = stacks * rangeModifier
+    local rangeAdded = (stacks * rangeModifier) + 50
 
     if rangeAdded >= 75 then
         return 75
@@ -210,7 +210,7 @@ function getQDmg(Target)
 
     end
 
-    local baseDmg = ({80,135,190,245,300})[Cho.W:GetLevel()]
+    local baseDmg = ({80,135,190,245,300})[Cho.Q:GetLevel()]
 
     local apDmg = LocalPlayer.TotalAP
 
@@ -358,7 +358,7 @@ function Cho.Logic.E(Target, Enable)
         return false
     end
 
-    if Enable and Utils.IsInRange(LocalPlayer.Position, Target.Position, 0, LocalPlayer.BoundingRadius + 175 + Utils.GetEBonusRange()) then
+    if Enable and Utils.IsInRange(LocalPlayer.Position, Target.Position, 0, 160+LocalPlayer.BoundingRadius+ Utils.GetEBonusRange()) then
 
 
 
@@ -476,6 +476,10 @@ function Cho.Logic.Combo()
 
     local Target = TS:GetTarget(Cho.Q.Range, true)
 
+    print(LocalPlayer.AttackRange)
+    print(LocalPlayer.BoundingRadius)
+
+
     if Target then
 
 
@@ -560,10 +564,14 @@ function Cho.LoadMenu()
         end)
 
         Menu.NewTree("Drawings", "Drawings", function()
-            Menu.Checkbox("Drawings.Q", "Q", true)
-            Menu.Checkbox("Drawings.E", "E", true)
-            Menu.Checkbox("Drawings.W", "W", true)
-            Menu.Checkbox("Drawings.R", "R", true)
+            Menu.Checkbox("Drawings.Q", "Draw Q", true)
+            Menu.ColorPicker("Drawings.Q.Color", "", 0xEF476FFF)
+            Menu.Checkbox("Drawings.E", "Draw E", true)
+            Menu.ColorPicker("Drawings.E.Color", "", 0xEF476FFF)
+            Menu.Checkbox("Drawings.W", "Draw W", true)
+            Menu.ColorPicker("Drawings.W.Color", "", 0xEF476FFF)
+            Menu.Checkbox("Drawings.R", "Draw R", true)
+            Menu.ColorPicker("Drawings.R.Color", "", 0xEF476FFF)
             Menu.Checkbox("Draw.ComboDamage", "Draw Combo Damage", true)
 
         end)
@@ -695,18 +703,18 @@ function Cho.OnDraw()
     -- Draw them all
 
     if Menu.Get("Drawings.E") then
-        Renderer.DrawCircle3D(LocalPlayer.Position, LocalPlayer.BoundingRadius + Utils.GetEBonusRange() + 175, 30, 1, 0xFF31FFFF)
+        Renderer.DrawCircle3D(LocalPlayer.Position,160+LocalPlayer.BoundingRadius+ Utils.GetEBonusRange(), 30, 1, Menu.Get("Drawings.E.Color"))
     end
     if Menu.Get("Drawings.Q") then
-        Renderer.DrawCircle3D(LocalPlayer.Position, Cho.Q.Range, 30, 1, 0xFF31FFFF)
+        Renderer.DrawCircle3D(LocalPlayer.Position, Cho.Q.Range, 30, 1, Menu.Get("Drawings.Q.Color"))
     end
 
     if Menu.Get("Drawings.R") then
-        Renderer.DrawCircle3D(LocalPlayer.Position, Cho.R.Range, 30, 1, 0xFF31FFFF)
+        Renderer.DrawCircle3D(LocalPlayer.Position, Cho.R.Range, 30, 1, Menu.Get("Drawings.R.Color"))
     end
 
     if Menu.Get("Drawings.W") then
-        Renderer.DrawCircle3D(LocalPlayer.Position, Cho.W.Range, 30, 1, 0xFF31FFFF)
+        Renderer.DrawCircle3D(LocalPlayer.Position, Cho.W.Range, 30, 1, Menu.Get("Drawings.W.Color"))
     end
 
     return true
